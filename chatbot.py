@@ -24,7 +24,7 @@ def chatting():
         commands.do(userMsg.strip())
         return
     # дезинформация\ logging.info("Отправление ответа...")
-    msg_result = vk_module.send_output_message(botmemory.name+botmemory.prefix+getResponse(userMsg))  # Результат отправления сообщения
+    msg_result = vk_module.send_output_message(botmemory.prefix+getResponse(userMsg))  # Результат отправления сообщения
     logging.info("Ответ отправлен") if len(msg_result)==0 else logging.info("Ответ не отправлен - "+msg_result)
     print(msg_result)  # если сообщение не отправлено, выводит причину
 

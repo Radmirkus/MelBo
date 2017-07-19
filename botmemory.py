@@ -7,9 +7,9 @@ config_path = "melbo.config"
 config = configparser.ConfigParser()
 config.read(config_path)
 
-name = config.get("optional", "name")
+name = config.get("info", "name")
 prefix = config.get("optional", "prefix")
-version = config.get("optional", "version")
+version = config.get("info", "version")
 chat_list = json.loads(config.get("optional", "chat_list"))
 ignore_users = json.loads(config.get("optional", "ignore_users"))
 testmode = config.getboolean("settings", "testmode")

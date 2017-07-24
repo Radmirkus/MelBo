@@ -1,5 +1,5 @@
 import json
-import vk_module
+import chatbot
 import logging
 import botmemory
 
@@ -11,15 +11,15 @@ with open('base.json', 'r') as baseRead:
 
 def train(query):
     logging.info("Обучение бота")
-    vk_module.send_output_message("Обучение: что ответить?")
+    chatbot.send_output_message("Обучение: что ответить?")
 
-    # msg_id_change = 1 if vk_module.channel_id==vk_module.my_id else 2
+    # msg_id_change = 1 if chatbot.channel_id==chatbot.my_id else 2
     if botmemory.testmode:
-        vk_module.last_msg_id += 1  # Чтобы не принял свое сообщение за правильный ответ
-        nowWillBeBotMsg = vk_module.nowWillBeBotMsg  # Чтобы не отправил ответ сам себе
-        vk_module.nowWillBeBotMsg = False if nowWillBeBotMsg else True
+        chatbot.last_msg_id += 1  # Чтобы не принял свое сообщение за правильный ответ
+        nowBotMsg = chatbot.nowBotMsg  # Чтобы не отправил ответ сам себе
+        chatbot.nowBotMsg = False if nowBotMsg else True
 
-    trueResponse = vk_module.get_input_message()
+    trueResponse = chatbot.get_input_message()
     base.append({'q': [query.lower()], 'a': [trueResponse]})
 
     baseToSave = json.dumps(base, ensure_ascii=False)

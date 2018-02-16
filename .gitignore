@@ -2,3 +2,4 @@
 __pycache__/
 melbo.config
 .gitignore.old
+token.st

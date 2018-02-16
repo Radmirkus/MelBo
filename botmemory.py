@@ -5,7 +5,7 @@ import json
 
 name = 'MelBo'
 prefix = ''
-version = '1.0.0'
+version = '1.1.0'
 chat_list = ['']
 ignore_users = ['']
 testmode = False

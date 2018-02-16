@@ -13,6 +13,9 @@ trainmode = False
 msg_timeout = 2
 msg_wait = 30
 active_mod_max_time = 600
+check_birthds = False
+birth_msg = "С днем рождения!!!"
+
 access_token = ''
 app_id = '5468754'
 my_id = ''
@@ -31,8 +34,10 @@ try:
     msg_timeout = config.getint("settings", "msg_timeout")
     msg_wait = config.getint("settings", "msg_wait")
     active_mod_max_time = config.getint("settings", "active_mod_max_time")
+    check_birthds = config.getboolean("settings", "check_birthds")
+    birth_msg = config.get("settings", "birth_msg")
     ##access_token = config.get("private", "access_token")
     ##my_id = config.get("private", "my_id")
-except:
+except ValueError:
     print('Не удалось найти melbo.config')
 

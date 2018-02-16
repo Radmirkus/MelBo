@@ -27,18 +27,18 @@ if botmemory.testmode:
 
 logging.basicConfig(format=u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level=logging.DEBUG, filename='bot.log')
 
-vk = simplevk.vk()
+#vk = simplevk.vk()
 while('vk'):
     try:
         login = input('    Login: ')
         password = input('    Password: ')
-        vk.authorize(botmemory.app_id, login, password, 'messages+offline', botmemory.api_version)
+        simplevk.authorize(botmemory.app_id, login, password, 'messages+offline', botmemory.api_version)
     except simplevk.AuthorizationError as autherr:
         print(autherr)
         continue
     print('Успешная авторизация')
     break
-my_id = vk.user_id
+my_id = simplevk.user_id
 ###сохранение пароля
 
 # Подключение базы ответов
@@ -51,6 +51,11 @@ def openBaseToRead():
 def chatting():
     logging.info("Получение сообщения...")
     userMsg = get_input_message()
+    if userMsg:
+        pass
+    else:
+        return
+
     logging.info("Сообщение получено: "+userMsg)
     if userMsg.strip().find('/')==0:
         commands.do(userMsg.strip())
@@ -70,7 +75,7 @@ def getResponse(userMsg):
     if botmemory.trainmode:
         bottrainer.train(userMsg)
         return 'Понял!'
-    return 'Я тебя не совсем понимаю'	
+    return '...'	
 
 #####
 
@@ -82,7 +87,7 @@ def get_input_message():
     global active_mode_timer
     global channel_type
 
-    result = vk.request("messages.get", "out=0&count=1")['response']
+    result = simplevk.request("messages.get", "out=0&count=1")['response']
     input_message = result['items'][0]['body']
     msg_id = result['items'][0]['id']
 
@@ -95,7 +100,7 @@ def get_input_message():
                 set_passive_mode()
             logging.info(mode+' '+str(active_mode_timer))
         time.sleep(msg_waiting_break)
-        return get_input_message()
+        return #get_input_message()
     set_active_mode()
     last_msg_id = msg_id
 
@@ -131,7 +136,7 @@ def send_output_message(output_message):
         if str(channel_id) in botmemory.ignore_users:
             return "Пользователь входит в список запрещенных"
     ##getter_id = "user_id" if channel_type=='user' else "chat_id"
-    res = vk.request("messages.send", ("user_id" if channel_type=='user' else "chat_id")+"="+str(channel_id)+"&message="+output_message)['response']
+    res = simplevk.request("messages.send", ("user_id" if channel_type=='user' else "chat_id")+"="+str(channel_id)+"&message="+output_message)['response']
     print('Отправлен ответ в канал '+str(channel_id))
     return ''
 

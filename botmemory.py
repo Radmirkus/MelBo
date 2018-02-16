@@ -25,6 +25,8 @@ config_path = "melbo.config"
 config = configparser.ConfigParser()
 config.read(config_path)
 
+token_path = "token.st"
+
 try:
     prefix = config.get("optional", "prefix")
     chat_list = json.loads(config.get("optional", "chat_list"))
@@ -36,8 +38,13 @@ try:
     active_mod_max_time = config.getint("settings", "active_mod_max_time")
     check_birthds = config.getboolean("settings", "check_birthds")
     birth_msg = config.get("settings", "birth_msg")
-    ##access_token = config.get("private", "access_token")
-    ##my_id = config.get("private", "my_id")
 except ValueError:
     print('Не удалось найти melbo.config')
 
+with open(token_path, "r") as token_file:
+    access_token = token_file.read()
+    ##my_id = config.get("private", "my_id")
+
+def save_token(token):
+    with open(token_path, 'w') as token_file:
+        token_file.write(token)

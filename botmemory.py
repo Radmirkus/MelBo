@@ -36,6 +36,8 @@ try:
     msg_timeout = config.getint("settings", "msg_timeout")
     msg_wait = config.getint("settings", "msg_wait")
     active_mod_max_time = config.getint("settings", "active_mod_max_time")
+    chatting = config.getboolean("settings", "chatting")
+    reposting = config.getboolean("settings", "reposting")
     check_birthds = config.getboolean("settings", "check_birthds")
     birth_msg = config.get("settings", "birth_msg")
 except ValueError:

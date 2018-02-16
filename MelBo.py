@@ -5,12 +5,16 @@ import statuser
 import botmemory
 import simplevk
 import getpass
+import threading
 
 
 app_id = botmemory.app_id
 my_id = botmemory.my_id
 access_token = botmemory.access_token
 v = botmemory.api_version
+
+chatting = botmemory.chatting
+reposting = botmemory.reposting
 
 
 vk = simplevk.vk()
@@ -28,7 +32,7 @@ while('vk'):
     try:
         login = input('    Login: ')
         password = getpass.getpass('    Password: ')
-        vk.authorize(botmemory.app_id, login, password, 'messages+offline', botmemory.api_version)
+        vk.authorize(botmemory.app_id, login, password, 'messages+offline+wall+friends', botmemory.api_version)
     except simplevk.AuthorizationError as autherr:
         print(autherr)
         continue
@@ -37,5 +41,10 @@ while('vk'):
     print('Успешная авторизация')
     break
 
-chatbot.start(vk)
+if chatting:
+    threading.Thread(target=chatbot.start, args=(vk,)).start()
+if reposting:
+    threading.Thread(target=reposter.start, args=(vk,)).start()
+#chatbot.start(vk)
+#reposter.start(vk)
 #birthcongr.start()

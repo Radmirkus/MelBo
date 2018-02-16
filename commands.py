@@ -10,6 +10,8 @@ def do(command):
         chatbot.send_output_message('Режим обучения отключен')
     elif command == '/version':
         chatbot.send_output_message(botmemory.version)
+    elif command == '/help':
+        chatbot.send_output_message('train on/off;version')
     else:
         #chatbot.send_output_message('Комманда не распознана')
         return

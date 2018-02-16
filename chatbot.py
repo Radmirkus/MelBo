@@ -146,7 +146,7 @@ def send_output_message(output_message):
             return "Чат не входит в список разрешенных"
     if channel_type == 'user':  # Тип канала - пользователь, который не в списке запрещенных
         if str(channel_id) in botmemory.ignore_users:
-            return "Пользователь входит в список запрещенных"
+            return "Пользователь входит в список игнорируемых"
     ##getter_id = "user_id" if channel_type=='user' else "chat_id"
     res = vk.request("messages.send", ("user_id" if channel_type=='user' else "chat_id")+"="+str(channel_id)+"&message="+output_message)['response']
     print('Отправлен ответ в канал '+str(channel_id))

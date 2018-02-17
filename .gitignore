@@ -1,5 +1,4 @@
 *.log
 __pycache__/
 melbo.config
-.gitignore.old
 token.st

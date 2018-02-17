@@ -41,10 +41,13 @@ while('vk'):
     print('Успешная авторизация')
     break
 
-if chatting:
-    threading.Thread(target=chatbot.start, args=(vk,)).start()
-if reposting:
-    threading.Thread(target=reposter.start, args=(vk,)).start()
+try:
+    if chatting:
+        threading.Thread(target=chatbot.start, args=(vk,)).start()
+    if reposting:
+        threading.Thread(target=reposter.start, args=(vk,)).start()
+except Exception as e:
+    print("Error: "+str(e))
 #chatbot.start(vk)
 #reposter.start(vk)
 #birthcongr.start()

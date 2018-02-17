@@ -22,10 +22,32 @@ my_id = ''
 api_version = '5.64'
 
 config_path = "melbo.config"
+token_path = "token.st"
+
+
+def copy_default_config():
+    config_file = open(config_path, 'w')
+    default_config = open("melbo.config.default", 'r')
+    config_file.write(default_config.read())
+    config_file.close()
+    default_config.close()
+    
+##Checking files for existence
+#configuration file
+try:
+    open(config_path).close()
+except IOError:
+    copy_default_config()
+#token file
+try:
+    open(token_path).close()
+except IOError:
+    open(token_path, 'w').close()
+
+
+
 config = configparser.ConfigParser()
 config.read(config_path)
-
-token_path = "token.st"
 
 try:
     prefix = config.get("optional", "prefix")
@@ -42,6 +64,8 @@ try:
     birth_msg = config.get("settings", "birth_msg")
 except ValueError:
     print('Не удалось найти melbo.config')
+except configparser.NoSectionError:
+    copy_default_config()
 
 with open(token_path, "r") as token_file:
     access_token = token_file.read()

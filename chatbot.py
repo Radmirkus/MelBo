@@ -6,6 +6,7 @@ import commands
 import simplevk
 import logging
 import time
+import getpass
 
 app_id = botmemory.app_id
 my_id = botmemory.my_id
@@ -21,25 +22,36 @@ msg_waiting_break = botmemory.msg_wait  # пауза между запросом
 active_mode_timer = active_mod_max_time / botmemory.msg_timeout
 v = botmemory.api_version
 mode = 'passive'
+vk = ""
 
 if botmemory.testmode:
     nowBotMsg = True
 
-logging.basicConfig(format=u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level=logging.DEBUG, filename='bot.log')
+logging.basicConfig(format=u' %(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level=logging.DEBUG, filename='bot.log')
 
-vk = simplevk.vk()
+"""vk = simplevk.vk()
+vk.access_token = access_token
+vk.v = v
+vk.app_id = app_id
 while('vk'):
+    if access_token!="":
+        try:
+            vk.user_id = vk.request('users.get')['response'][0]['id']
+            print("Успешная авторизация")
+            break
+        except KeyError:
+            print("Возникла ошибка, нужна авторизация")
     try:
         login = input('    Login: ')
-        password = input('    Password: ')
+        password = getpass.getpass('    Password: ')
         vk.authorize(botmemory.app_id, login, password, 'messages+offline', botmemory.api_version)
     except simplevk.AuthorizationError as autherr:
         print(autherr)
         continue
+    if input('    Save password? [y/n]')=="y":
+            botmemory.save_token(vk.access_token)
     print('Успешная авторизация')
-    break
-my_id = vk.user_id
-###сохранение пароля
+    break"""
 
 # Подключение базы ответов
 def openBaseToRead():
@@ -51,6 +63,11 @@ def openBaseToRead():
 def chatting():
     logging.info("Получение сообщения...")
     userMsg = get_input_message()
+    if userMsg:
+        pass
+    else:
+        return
+
     logging.info("Сообщение получено: "+userMsg)
     if userMsg.strip().find('/')==0:
         commands.do(userMsg.strip())
@@ -70,7 +87,7 @@ def getResponse(userMsg):
     if botmemory.trainmode:
         bottrainer.train(userMsg)
         return 'Понял!'
-    return 'Я тебя не совсем понимаю'	
+    return '...'	
 
 #####
 
@@ -95,7 +112,7 @@ def get_input_message():
                 set_passive_mode()
             logging.info(mode+' '+str(active_mode_timer))
         time.sleep(msg_waiting_break)
-        return get_input_message()
+        return #get_input_message()
     set_active_mode()
     last_msg_id = msg_id
 
@@ -129,7 +146,7 @@ def send_output_message(output_message):
             return "Чат не входит в список разрешенных"
     if channel_type == 'user':  # Тип канала - пользователь, который не в списке запрещенных
         if str(channel_id) in botmemory.ignore_users:
-            return "Пользователь входит в список запрещенных"
+            return "Пользователь входит в список игнорируемых"
     ##getter_id = "user_id" if channel_type=='user' else "chat_id"
     res = vk.request("messages.send", ("user_id" if channel_type=='user' else "chat_id")+"="+str(channel_id)+"&message="+output_message)['response']
     print('Отправлен ответ в канал '+str(channel_id))
@@ -160,10 +177,15 @@ def set_passive_mode():
 #####
 
 # Старт
-def start():
+def start(vk_s):
+    global vk
+    global my_id
     logging.info("!!!Бот запущен")
+    vk = vk_s
+    my_id = vk.user_id
+
     get_input_message()  # Получение последнего полученного сообщения, чтобы не ответить на старое сообщение
-    set_passive_mode()
+    set_active_mode()
     while True:
         openBaseToRead()
         chatting()
